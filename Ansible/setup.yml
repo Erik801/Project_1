@@ -1,0 +1,33 @@
+---
+  - name: My first playbook
+    hosts: webservers
+    become: true
+    tasks:
+    - name: unistall apache httpd  (state=present is optional)
+      apt:
+        name: apache2
+        state: absent
+    - name: docker.io
+      apt:
+        update_cache: yes
+        name: docker.io
+        state: present
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+    - name: Install Python Docker Module
+      pip:
+        name: docker
+        state: present
+    - name: download and lauch a docker web container
+      docker_container:
+        name: dvwa
+        image: cyberxsecurity/dvwa
+        state: started
+        restart_policy: always
+        published_ports: 80:80
+    - name: Enable Docker Service
+      systemd:
+        name: docker
+        enabled: yes
